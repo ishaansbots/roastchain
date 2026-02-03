@@ -5,8 +5,9 @@
 
 const TOKEN_ADDRESS = "0x75edb1f40a6f8b519453989dc426eb236663109f";
 const BATTLE_ADDRESS = "0xb9f68aa4f86a34db6e910cfddf6f3baa21b88d35";
-const CHAIN_ID = 8453; // Base mainnet
-const CHAIN_ID_HEX = '0x2105';
+const CHAIN_ID = 84532; // Base Sepolia Testnet
+const CHAIN_ID_HEX = '0x14a34';
+const IS_TESTNET = true;
 
 let userAddress = null;
 
@@ -44,10 +45,10 @@ connectButton?.addEventListener('click', async () => {
                         method: 'wallet_addEthereumChain',
                         params: [{
                             chainId: CHAIN_ID_HEX,
-                            chainName: 'Base',
+                            chainName: 'Base Sepolia',
                             nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-                            rpcUrls: ['https://mainnet.base.org'],
-                            blockExplorerUrls: ['https://basescan.org']
+                            rpcUrls: ['https://sepolia.base.org'],
+                            blockExplorerUrls: ['https://sepolia.basescan.org']
                         }]
                     });
                 } else {
