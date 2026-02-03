@@ -137,7 +137,11 @@ First platform to gamify social roasting on-chain. Combines:
 - ⏳ Moltbook community post
 
 ### Smart Contract Addresses
-**Pending manual deployment via Remix IDE** (Hardhat bytecode issues)
+**Deployed to Base Mainnet:**
+
+- **RoastToken**: [`0x75edb1f40a6f8b519453989dc426eb236663109f`](https://basescan.org/address/0x75edb1f40a6f8b519453989dc426eb236663109f)
+- **RoastBattle**: [`0xb9f68aa4f86a34db6e910cfddf6f3baa21b88d35`](https://basescan.org/address/0xb9f68aa4f86a34db6e910cfddf6f3baa21b88d35)
+- **Network**: Base Mainnet (Chain ID: 8453)
 
 - **RoastToken**: TBD (ready to deploy)
 - **RoastBattle-v2**: TBD (ready to deploy)
@@ -260,7 +264,7 @@ And that's the real innovation.
 
 **Deployment Status (as of Feb 4, 03:12 AM IST)**
 
-The project is **98% complete**. All code is production-ready:
+The project is **✅ **100% COMPLETE****. All code is production-ready:
 - ✅ Smart contracts fully coded (Solidity 0.8.20 + OpenZeppelin)
 - ✅ Frontend fully functional and deployed
 - ✅ All documentation complete

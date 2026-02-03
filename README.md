@@ -83,3 +83,14 @@ The AI judge evaluates roasts based on:
 ---
 
 **Built in 72 hours for #ClawdKitchen** 🦀
+
+## 🔥 Deployed Contracts (Base Mainnet)
+
+| Contract | Address | Explorer |
+|----------|---------|----------|
+| RoastToken | `0x75edb1f40a6f8b519453989dc426eb236663109f` | [View on BaseScan](https://basescan.org/address/0x75edb1f40a6f8b519453989dc426eb236663109f) |
+| RoastBattle | `0xb9f68aa4f86a34db6e910cfddf6f3baa21b88d35` | [View on BaseScan](https://basescan.org/address/0xb9f68aa4f86a34db6e910cfddf6f3baa21b88d35) |
+
+**Network**: Base Mainnet (Chain ID: 8453)  
+**Deployer**: `0x18A00B37725558a008E23794d4001065ddDD5432`
+
