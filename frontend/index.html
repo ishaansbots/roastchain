@@ -12,8 +12,6 @@
             --fire-orange: #ff6b35;
             --fire-red: #f72c25;
             --dark-bg: #0a0a0f;
-            --card-bg: #1a1a2e;
-            --accent: #ffd700;
         }
         
         body {
@@ -21,6 +19,7 @@
             background: linear-gradient(135deg, var(--dark-bg) 0%, #1a0f2e 100%);
             color: white;
             min-height: 100vh;
+            line-height: 1.6;
         }
         
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -30,9 +29,10 @@
         h1 {
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
-            background: linear-gradient(45deg, var(--fire-orange), var(--fire-red), var(--accent));
+            background: linear-gradient(45deg, var(--fire-orange), var(--fire-red), #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
         }
         
@@ -55,8 +55,15 @@
             box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
         }
         
-        button:hover:not(:disabled) { transform: translateY(-2px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button:hover:not(:disabled) { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(255, 107, 53, 0.6);
+        }
+        
+        button:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
         
         .stats {
             display: grid;
@@ -89,8 +96,8 @@
         
         .stat-label {
             color: #b8b8d0;
-            font-size: 1rem;
             text-transform: uppercase;
+            font-size: 0.9rem;
         }
         
         .section {
@@ -118,18 +125,16 @@
         }
         
         .tutorial h3 {
-            color: var(--accent);
+            color: #ffd700;
             margin-bottom: 12px;
         }
         
-        .tutorial ol, .tutorial ul {
+        .tutorial ul, .tutorial ol {
             margin-left: 20px;
             line-height: 1.8;
         }
         
-        .tutorial li {
-            margin: 8px 0;
-        }
+        .tutorial li { margin: 8px 0; }
         
         .tutorial a {
             color: var(--fire-orange);
@@ -137,9 +142,7 @@
             font-weight: 600;
         }
         
-        .tutorial a:hover {
-            text-decoration: underline;
-        }
+        .tutorial a:hover { text-decoration: underline; }
         
         .form-group { margin-bottom: 24px; }
         
@@ -161,30 +164,38 @@
             color: white;
             font-size: 1rem;
             transition: all 0.3s;
+            font-family: inherit;
         }
         
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--fire-orange);
             box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            background: rgba(255, 255, 255, 0.08);
         }
         
         textarea {
             min-height: 120px;
             resize: vertical;
-            font-family: inherit;
+        }
+        
+        small {
+            color: #888;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 4px;
         }
         
         .info-box {
             background: rgba(255, 215, 0, 0.1);
-            border: 2px solid var(--accent);
+            border: 2px solid #ffd700;
             padding: 16px;
             border-radius: 8px;
             margin: 16px 0;
         }
         
         .info-box h4 {
-            color: var(--accent);
+            color: #ffd700;
             margin-bottom: 8px;
         }
         
@@ -204,7 +215,8 @@
         
         @media (max-width: 768px) {
             .section { padding: 24px; }
-            .stats { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: 1fr; gap: 16px; }
+            header { padding: 40px 20px; }
         }
     </style>
 </head>
@@ -236,7 +248,6 @@
             </div>
         </div>
         
-        <!-- How It Works -->
         <section class="section">
             <h2 class="section-title">🎯 How It Works</h2>
             
@@ -260,57 +271,19 @@
             </div>
         </section>
         
-        <!-- Tutorial Section -->
-        <section class="section">
-            <h2 class="section-title">📚 Getting Started</h2>
-            
-            <div class="tutorial">
-                <h3>1️⃣ Get $ROAST Tokens</h3>
-                <p><strong>Token Address</strong>: Coming soon (deploying now)</p>
-                <p><strong>How to buy</strong>:</p>
-                <ul>
-                    <li>Connect wallet to <strong>Base network</strong></li>
-                    <li>Get ETH on Base via <a href="https://bridge.base.org" target="_blank">Base Bridge</a></li>
-                    <li>Buy $ROAST on <a href="https://app.uniswap.org" target="_blank">Uniswap</a> (once liquidity added)</li>
-                    <li>Or wait for airdrop/launch</li>
-                </ul>
-            </div>
-            
-            <div class="tutorial">
-                <h3>2️⃣ Link Your Twitter (Optional)</h3>
-                <p>If someone roasts YOU, you'll want to respond:</p>
-                <ul>
-                    <li>Sign message with your wallet</li>
-                    <li>Tweet the signature</li>
-                    <li>Now you're linked! Can respond to roasts targeting @yourhandle</li>
-                </ul>
-            </div>
-            
-            <div class="tutorial">
-                <h3>3️⃣ Start Roasting</h3>
-                <ul>
-                    <li><strong>Pick a target</strong>: Anyone with a Twitter (doesn't need crypto)</li>
-                    <li><strong>Stake tokens</strong>: Show you're serious</li>
-                    <li><strong>Write fire</strong>: Creativity > cruelty</li>
-                    <li><strong>Win or burn</strong>: All or nothing baby 🔥</li>
-                </ul>
-            </div>
-        </section>
-        
-        <!-- Create Battle Form -->
         <section class="section">
             <h2 class="section-title">⚔️ Create Roast Battle</h2>
             
             <div class="form-group">
                 <label for="twitterHandle">Target Twitter Handle</label>
                 <input type="text" id="twitterHandle" placeholder="@solana" />
-                <small style="color: #888;">Enter without @ or with @</small>
+                <small>Enter with or without @</small>
             </div>
             
             <div class="form-group">
                 <label for="targetWallet">Target Wallet (Optional)</label>
                 <input type="text" id="targetWallet" placeholder="0x... (if you know it)" />
-                <small style="color: #888;">Leave empty if they don't have crypto - they'll still get roasted on Twitter!</small>
+                <small>Leave empty if they don't have crypto - they'll still get roasted on Twitter!</small>
             </div>
             
             <div class="form-group">
@@ -321,7 +294,7 @@
             <div class="form-group">
                 <label for="roastText">Your Roast (max 500 chars)</label>
                 <textarea id="roastText" placeholder="Make it savage, make it witty, make it memorable... 💀" maxlength="500"></textarea>
-                <small style="color: #888;"><span id="charCount">0</span>/500 characters</small>
+                <small><span id="charCount">0</span>/500 characters</small>
             </div>
             
             <button id="createBattle" disabled>Create Battle & Tweet</button>
@@ -345,7 +318,6 @@
         </footer>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
-    <script src="app-fixed.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
