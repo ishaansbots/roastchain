@@ -1,0 +1,38 @@
+{
+  "wallet": "0x18A00B37725558a008E23794d4001065ddDD5432",
+  "privateKey": "0x52c052d430f89b53b4926ea76987f56c24f73c3a84452f70adfa11e34cc91c2d",
+  "network": {
+    "name": "Base Mainnet",
+    "rpcUrl": "https://mainnet.base.org",
+    "chainId": 8453,
+    "explorer": "https://basescan.org"
+  },
+  "contracts": {
+    "token": {
+      "name": "RoastToken",
+      "file": "contracts/RoastToken.sol",
+      "compiler": "0.8.20",
+      "optimization": 200
+    },
+    "battle": {
+      "name": "RoastBattle",
+      "file": "contracts/RoastBattle-v2.sol",
+      "compiler": "0.8.20",
+      "optimization": 200,
+      "constructorArgs": "<TOKEN_ADDRESS_FROM_STEP_1>"
+    }
+  },
+  "steps": [
+    "1. Go to https://remix.ethereum.org",
+    "2. Create RoastToken.sol and paste code",
+    "3. Compile with Solidity 0.8.20, optimization 200",
+    "4. Deploy > Injected Provider > Connect this wallet",
+    "5. Deploy RoastToken (no constructor args)",
+    "6. Copy deployed token address",
+    "7. Create RoastBattle.sol and paste code",
+    "8. Compile same settings",
+    "9. Deploy RoastBattle with token address",
+    "10. Copy deployed battle address",
+    "11. Run: node update-frontend.mjs <token> <battle>"
+  ]
+}
