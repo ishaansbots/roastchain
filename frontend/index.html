@@ -1,319 +1,545 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="color-scheme: dark;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 ROASTCHAIN - On-Chain Roast Battles</title>
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="description" content="RoastChain - On-chain roast battles on Base. AI-judged. Winner takes all, loser gets burned.">
+    
+    <title>RoastChain — On-Chain Roast Battles</title>
+    
+    <!-- Preconnect to critical domains -->
+    <link rel="preconnect" href="https://mainnet.base.org">
+    <link rel="preconnect" href="https://basescan.org">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Modern CSS Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         
         :root {
             --fire-orange: #ff6b35;
             --fire-red: #f72c25;
             --dark-bg: #0a0a0f;
+            --card-bg: #1a1a2e;
+            --accent: #ffd700;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8d0;
+            --border: rgba(255, 107, 53, 0.2);
+            --focus-ring: rgba(255, 107, 53, 0.5);
+        }
+        
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background: linear-gradient(135deg, var(--dark-bg) 0%, #1a0f2e 100%);
-            color: white;
+            color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--fire-orange);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            font-weight: 600;
+        }
         
-        header { text-align: center; padding: 60px 20px; }
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px);
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: clamp(40px, 8vw, 80px) 20px;
+        }
         
         h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 900;
-            background: linear-gradient(45deg, var(--fire-orange), var(--fire-red), #ffd700);
+            background: linear-gradient(45deg, var(--fire-orange), var(--fire-red), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+            text-wrap: balance;
         }
         
         .tagline {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            color: #b8b8d0;
-            margin-bottom: 40px;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-wrap: pretty;
         }
         
+        /* Buttons */
         button {
             background: linear-gradient(135deg, var(--fire-orange), var(--fire-red));
             border: none;
-            padding: 16px 32px;
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            font-weight: 700;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
             color: white;
             cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+            border-radius: 8px;
+            transition: transform 150ms ease, box-shadow 150ms ease;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            font-family: inherit;
+            touch-action: manipulation;
         }
         
-        button:hover:not(:disabled) { 
+        button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(255, 107, 53, 0.6);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
-        button:disabled { 
-            opacity: 0.5; 
-            cursor: not-allowed; 
+        button:active:not(:disabled) {
+            transform: translateY(0);
         }
         
+        button:focus-visible {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Stats Grid */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-            margin: 60px 0;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 48px 0;
         }
         
         .stat-card {
             background: rgba(26, 26, 46, 0.6);
             backdrop-filter: blur(10px);
-            padding: 32px;
-            border-radius: 16px;
+            padding: 28px 24px;
+            border-radius: 12px;
             text-align: center;
-            border: 2px solid rgba(255, 107, 53, 0.2);
-            transition: all 0.3s;
+            border: 2px solid var(--border);
+            transition: transform 200ms ease, border-color 200ms ease;
         }
         
         .stat-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: var(--fire-orange);
         }
         
         .stat-value {
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(2rem, 5vw, 2.5rem);
             font-weight: 900;
             color: var(--fire-orange);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            font-variant-numeric: tabular-nums;
         }
         
         .stat-label {
-            color: #b8b8d0;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
         
+        /* Sections */
         .section {
             background: rgba(26, 26, 46, 0.8);
             backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 20px;
-            border: 2px solid rgba(255, 107, 53, 0.2);
+            padding: clamp(24px, 5vw, 40px);
+            border-radius: 16px;
+            border: 2px solid var(--border);
             margin: 40px 0;
         }
         
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
+        h2 {
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
             font-weight: 800;
             color: var(--fire-orange);
             margin-bottom: 24px;
+            scroll-margin-top: 80px;
         }
         
+        h3 {
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Tutorial boxes */
         .tutorial {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin: 16px 0;
             border-left: 4px solid var(--fire-orange);
         }
         
-        .tutorial h3 {
-            color: #ffd700;
-            margin-bottom: 12px;
-        }
-        
-        .tutorial ul, .tutorial ol {
+        .tutorial ol, .tutorial ul {
             margin-left: 20px;
             line-height: 1.8;
         }
         
-        .tutorial li { margin: 8px 0; }
+        .tutorial li {
+            margin: 8px 0;
+        }
         
         .tutorial a {
             color: var(--fire-orange);
             text-decoration: none;
             font-weight: 600;
+            transition: color 150ms ease;
         }
         
-        .tutorial a:hover { text-decoration: underline; }
+        .tutorial a:hover {
+            color: var(--fire-red);
+            text-decoration: underline;
+        }
         
-        .form-group { margin-bottom: 24px; }
+        .tutorial a:focus-visible {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 24px;
+        }
         
         label {
             display: block;
             margin-bottom: 8px;
-            color: #b8b8d0;
+            color: var(--text-secondary);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         input, textarea {
             width: 100%;
-            padding: 16px;
+            padding: 14px 16px;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 8px;
             color: white;
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
             font-family: inherit;
+            -webkit-appearance: none;
+        }
+        
+        input:hover, textarea:hover {
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--fire-orange);
-            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 0 0 3px var(--focus-ring);
             background: rgba(255, 255, 255, 0.08);
         }
         
         textarea {
             min-height: 120px;
             resize: vertical;
+            overflow-y: auto;
         }
         
         small {
             color: #888;
             font-size: 0.85rem;
             display: block;
-            margin-top: 4px;
+            margin-top: 6px;
         }
         
+        /* Info box */
         .info-box {
-            background: rgba(255, 215, 0, 0.1);
-            border: 2px solid #ffd700;
-            padding: 16px;
-            border-radius: 8px;
-            margin: 16px 0;
+            background: rgba(255, 215, 0, 0.08);
+            border: 2px solid var(--accent);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
         
         .info-box h4 {
-            color: #ffd700;
-            margin-bottom: 8px;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 1rem;
         }
         
+        .info-box p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
         footer {
             text-align: center;
             padding: 60px 20px;
             margin-top: 80px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #b8b8d0;
+            color: var(--text-secondary);
         }
         
         footer a {
             color: var(--fire-orange);
             text-decoration: none;
             font-weight: 600;
+            transition: color 150ms ease;
         }
         
+        footer a:hover {
+            color: var(--fire-red);
+        }
+        
+        footer a:focus-visible {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+        
+        /* Loading state */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 600ms linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .section { padding: 24px; }
-            .stats { grid-template-columns: 1fr; gap: 16px; }
-            header { padding: 40px 20px; }
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            header {
+                padding: 32px 16px;
+            }
+        }
+        
+        /* Dark scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 53, 0.3);
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 107, 53, 0.5);
         }
     </style>
 </head>
 <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+    
     <div class="container">
         <header>
-            <h1>🔥 ROASTCHAIN</h1>
+            <h1>🔥 RoastChain</h1>
             <p class="tagline">
-                Roast anyone on Twitter + stake crypto. AI judges. Winner takes all. Loser gets <strong>BURNED</strong>. 💀
+                Roast anyone on Twitter&nbsp;+ stake crypto. AI&nbsp;judges. Winner takes all, loser gets burned.&nbsp;💀
             </p>
-            <button id="connectWallet">Connect Wallet</button>
-            <div id="walletInfo" style="display: none; margin-top: 16px;">
-                <span id="walletAddress" style="font-family: monospace;"></span>
+            <button id="connectWallet" type="button" aria-label="Connect cryptocurrency wallet">
+                Connect Wallet
+            </button>
+            <div id="walletInfo" style="display: none; margin-top: 16px;" role="status" aria-live="polite">
+                <span id="walletAddress" style="font-family: 'SF Mono', 'Roboto Mono', monospace; font-size: 0.95rem;"></span>
             </div>
         </header>
         
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-value">2</div>
-                <div class="stat-label">Total Battles</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">150</div>
-                <div class="stat-label">$ROAST Burned</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">1</div>
-                <div class="stat-label">Active Battles</div>
-            </div>
-        </div>
-        
-        <section class="section">
-            <h2 class="section-title">🎯 How It Works</h2>
-            
-            <div class="tutorial">
-                <h3>The RoastChain Process:</h3>
-                <ol>
-                    <li><strong>Pick Your Target</strong> - Enter their Twitter handle (like @solana or @elonmusk)</li>
-                    <li><strong>Write Your Roast</strong> - Make it savage, witty, and memorable</li>
-                    <li><strong>Stake $ROAST Tokens</strong> - Put your money where your mouth is (min 100 ROAST)</li>
-                    <li><strong>We Tweet It</strong> - Your roast gets posted on Twitter, tagging them</li>
-                    <li><strong>They Can Respond</strong> - If they have crypto, they stake & roast back</li>
-                    <li><strong>AI Judges Winner</strong> - Best roast wins the pot, loser gets BURNED 🔥</li>
-                </ol>
+        <main id="main">
+            <div class="stats" role="region" aria-label="Platform statistics">
+                <div class="stat-card">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Total Battles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">150</div>
+                    <div class="stat-label">$ROAST Burned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Active Battles</div>
+                </div>
             </div>
             
-            <div class="info-box">
-                <h4>💡 Why This Works</h4>
-                <p><strong>Twitter-First</strong>: You know handles, not wallet addresses. Roasting is social!</p>
-                <p><strong>Optional Crypto</strong>: Target can respond on-chain if they want, or just see the roast on Twitter.</p>
-                <p><strong>Viral Potential</strong>: Every roast is a tweet = free marketing</p>
-            </div>
-        </section>
-        
-        <section class="section">
-            <h2 class="section-title">⚔️ Create Roast Battle</h2>
+            <section class="section" aria-labelledby="how-it-works">
+                <h2 id="how-it-works">🎯 How It Works</h2>
+                
+                <div class="tutorial">
+                    <h3>The RoastChain Process:</h3>
+                    <ol>
+                        <li><strong>Pick Your Target</strong>&nbsp;— Enter their Twitter handle (like @solana or @elonmusk)</li>
+                        <li><strong>Write Your Roast</strong>&nbsp;— Make it savage, witty, and memorable</li>
+                        <li><strong>Stake $ROAST Tokens</strong>&nbsp;— Put your money where your mouth is (min&nbsp;100&nbsp;ROAST)</li>
+                        <li><strong>We Tweet It</strong>&nbsp;— Your roast gets posted on Twitter, tagging them</li>
+                        <li><strong>They Can Respond</strong>&nbsp;— If they have crypto, they stake&nbsp;& roast back</li>
+                        <li><strong>AI Judges Winner</strong>&nbsp;— Best roast wins the pot, loser gets BURNED&nbsp;🔥</li>
+                    </ol>
+                </div>
+                
+                <div class="info-box" role="complementary">
+                    <h4>💡 Why This Works</h4>
+                    <p><strong>Twitter-First</strong>: You know handles, not wallet addresses. Roasting is social!</p>
+                    <p><strong>Optional Crypto</strong>: Target can respond on-chain if they want, or just see the roast on Twitter.</p>
+                    <p><strong>Viral Potential</strong>: Every roast is a tweet&nbsp;= free marketing</p>
+                </div>
+            </section>
             
-            <div class="form-group">
-                <label for="twitterHandle">Target Twitter Handle</label>
-                <input type="text" id="twitterHandle" placeholder="@solana" />
-                <small>Enter with or without @</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="targetWallet">Target Wallet (Optional)</label>
-                <input type="text" id="targetWallet" placeholder="0x... (if you know it)" />
-                <small>Leave empty if they don't have crypto - they'll still get roasted on Twitter!</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="stakeAmount">Stake Amount (ROAST)</label>
-                <input type="number" id="stakeAmount" placeholder="100" min="100" />
-            </div>
-            
-            <div class="form-group">
-                <label for="roastText">Your Roast (max 500 chars)</label>
-                <textarea id="roastText" placeholder="Make it savage, make it witty, make it memorable... 💀" maxlength="500"></textarea>
-                <small><span id="charCount">0</span>/500 characters</small>
-            </div>
-            
-            <button id="createBattle" disabled>Create Battle & Tweet</button>
-            
-            <div class="info-box" style="margin-top: 24px;">
-                <h4>⚠️ What Happens Next</h4>
-                <p>1. Your roast gets tweeted from @kalesh_bot tagging the target</p>
-                <p>2. If they have a linked wallet, they get notified to respond</p>
-                <p>3. They have 24 hours to roast back (or you win by default)</p>
-                <p>4. AI judges the winner based on creativity, wit & savagery</p>
-                <p>5. Winner takes 95% of pot, loser's tokens BURN forever 🔥</p>
-            </div>
-        </section>
+            <section class="section" aria-labelledby="create-battle">
+                <h2 id="create-battle">⚔️ Create Roast Battle</h2>
+                
+                <form id="battleForm" aria-label="Create roast battle form">
+                    <div class="form-group">
+                        <label for="twitterHandle">Target Twitter Handle</label>
+                        <input 
+                            type="text" 
+                            id="twitterHandle" 
+                            name="twitter-handle"
+                            placeholder="@solana" 
+                            autocomplete="off"
+                            spellcheck="false"
+                            aria-describedby="twitter-hint"
+                        />
+                        <small id="twitter-hint">Enter with or without @</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="targetWallet">Target Wallet (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="targetWallet" 
+                            name="target-wallet"
+                            placeholder="0x… (if you know it)" 
+                            autocomplete="off"
+                            spellcheck="false"
+                            pattern="0x[a-fA-F0-9]{40}"
+                            aria-describedby="wallet-hint"
+                        />
+                        <small id="wallet-hint">Leave empty if they don't have crypto&nbsp;— they'll still get roasted on Twitter!</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stakeAmount">Stake Amount (ROAST)</label>
+                        <input 
+                            type="number" 
+                            id="stakeAmount" 
+                            name="stake-amount"
+                            placeholder="100" 
+                            min="100"
+                            step="1"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            aria-describedby="stake-hint"
+                        />
+                        <small id="stake-hint">Minimum 100&nbsp;ROAST</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roastText">Your Roast (max 500&nbsp;chars)</label>
+                        <textarea 
+                            id="roastText" 
+                            name="roast-text"
+                            placeholder="Make it savage, make it witty, make it memorable…" 
+                            maxlength="500"
+                            aria-describedby="roast-hint"
+                        ></textarea>
+                        <small id="roast-hint"><span id="charCount" aria-live="polite">0</span>/500 characters</small>
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        id="createBattle" 
+                        disabled 
+                        aria-label="Create battle and tweet roast"
+                    >
+                        Create Battle&nbsp;& Tweet
+                    </button>
+                </form>
+                
+                <div class="info-box" role="complementary" style="margin-top: 24px;">
+                    <h4>⚠️ What Happens Next</h4>
+                    <p>1. Your roast gets tweeted from @kalesh_bot tagging the target</p>
+                    <p>2. If they have a linked wallet, they get notified to respond</p>
+                    <p>3. They have 24&nbsp;hours to roast back (or you win by default)</p>
+                    <p>4. AI judges the winner based on creativity, wit&nbsp;& savagery</p>
+                    <p>5. Winner takes 95% of pot, loser's tokens BURN forever&nbsp;🔥</p>
+                </div>
+            </section>
+        </main>
         
         <footer>
-            <p>Built for <a href="https://clawd.kitchen" target="_blank">#ClawdKitchen</a> by <a href="https://x.com/kalesh_bot" target="_blank">@kalesh_bot</a></p>
+            <p>
+                Built for <a href="https://clawd.kitchen" target="_blank" rel="noopener">ClawdKitchen</a> by 
+                <a href="https://x.com/kalesh_bot" target="_blank" rel="noopener">@kalesh_bot</a>
+            </p>
             <p style="margin-top: 16px; font-size: 0.9rem;">
-                Powered by <a href="https://base.org" target="_blank">Base</a> · 
-                <a href="https://github.com/ishaansbots/roastchain" target="_blank">GitHub</a>
+                Powered by <a href="https://base.org" target="_blank" rel="noopener">Base</a>&nbsp;· 
+                <a href="https://github.com/ishaansbots/roastchain" target="_blank" rel="noopener">GitHub</a>
             </p>
         </footer>
     </div>
