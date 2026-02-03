@@ -664,60 +664,21 @@ Recommendation: STRONG WINNER CANDIDATE
         
         connectButton?.addEventListener('click', async () => {
             try {
-                console.log('[RoastChain] Initiating wallet connection...');
-                
-                if (typeof window.ethereum === 'undefined') {
-                    alert('MetaMask not detected.\n\nPlease install MetaMask to use RoastChain:\nhttps://metamask.io');
-                    window.open('https://metamask.io', '_blank', 'noopener,noreferrer');
+                if (!window.ethereum) {
+                    alert('Please install Rainbow wallet or MetaMask');
                     return;
                 }
                 
+                // Simple wallet connection
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
                 });
                 
-                if (!accounts || accounts.length === 0) {
-                    throw new Error('No accounts returned');
-                }
+                if (!accounts?.[0]) return;
                 
                 userAddress = accounts[0];
-                console.log('[RoastChain] Connected:', userAddress);
                 
-                // Verify/switch to Base network
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                
-                if (chainId !== CHAIN_ID_HEX) {
-                    console.log('[RoastChain] Switching to Base network...');
-                    
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: CHAIN_ID_HEX }],
-                        });
-                    } catch (switchError) {
-                        if (switchError.code === 4902) {
-                            console.log('[RoastChain] Adding Base network...');
-                            await window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [{
-                                    chainId: CHAIN_ID_HEX,
-                                    chainName: 'Base Sepolia',
-                                    nativeCurrency: {
-                                        name: 'Ethereum',
-                                        symbol: 'ETH',
-                                        decimals: 18
-                                    },
-                                    rpcUrls: ['https://sepolia.base.org'],
-                                    blockExplorerUrls: ['https://sepolia.basescan.org']
-                                }]
-                            });
-                        } else {
-                            throw switchError;
-                        }
-                    }
-                }
-                
-                // Update UI
+                // Update UI immediately
                 connectButton.style.display = 'none';
                 walletStatus.style.display = 'flex';
                 walletStatus.style.justifyContent = 'center';
@@ -727,19 +688,43 @@ Recommendation: STRONG WINNER CANDIDATE
                     createBattleButton.disabled = false;
                 }
                 
-                console.log('[RoastChain] ✓ Connection successful');
+                // Check network AFTER UI update (non-blocking)
+                setTimeout(async () => {
+                    try {
+                        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                        if (chainId !== CHAIN_ID_HEX) {
+                            const switch_network = confirm('Switch to Base Sepolia testnet?');
+                            if (switch_network) {
+                                try {
+                                    await window.ethereum.request({
+                                        method: 'wallet_switchEthereumChain',
+                                        params: [{ chainId: CHAIN_ID_HEX }]
+                                    });
+                                } catch (err) {
+                                    if (err.code === 4902) {
+                                        await window.ethereum.request({
+                                            method: 'wallet_addEthereumChain',
+                                            params: [{
+                                                chainId: CHAIN_ID_HEX,
+                                                chainName: 'Base Sepolia',
+                                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                                rpcUrls: ['https://sepolia.base.org'],
+                                                blockExplorerUrls: ['https://sepolia.basescan.org']
+                                            }]
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Network check:', e);
+                    }
+                }, 100);
                 
             } catch (error) {
-                console.error('[RoastChain] Connection error:', error);
-                
-                let errorMessage = 'Failed to connect wallet.';
-                if (error.code === 4001) {
-                    errorMessage = 'Connection rejected.\n\nPlease approve the connection in MetaMask.';
-                } else if (error.message) {
-                    errorMessage += '\n\n' + error.message;
+                if (error.code !== 4001) { // User rejected
+                    alert('Connection failed: ' + error.message);
                 }
-                
-                alert(errorMessage);
             }
         });
         
