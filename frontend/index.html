@@ -507,8 +507,8 @@ Recommendation: STRONG WINNER CANDIDATE
                 The first <strong>on-chain roast battle</strong> platform.<br>
                 Stake crypto. Drop your best roast. <strong>AI judges.</strong> Winner takes all. 💀
             </p>
-            <button id="connectButton" class="btn-primary">
-                Connect Wallet
+            <button id="connectButton" class="btn-primary" onclick="connectWalletNow()">
+                Connect Any Wallet
             </button>
             <div id="walletStatus" style="display: none;">
                 <div class="wallet-status">
@@ -516,6 +516,9 @@ Recommendation: STRONG WINNER CANDIDATE
                     <span id="walletAddress"></span>
                 </div>
             </div>
+            <p style="text-align: center; margin-top: 10px; opacity: 0.7; font-size: 0.9rem;">
+                Works with Rainbow, MetaMask, Coinbase, Trust, and all Web3 wallets
+            </p>
         </header>
         
         <div class="stats">
@@ -646,6 +649,65 @@ Recommendation: STRONG WINNER CANDIDATE
         
         let userAddress = null;
         
+        // Universal wallet connector - works with ALL Web3 wallets
+        window.connectWalletNow = async function() {
+            try {
+                if (!window.ethereum) {
+                    alert('No Web3 wallet detected!\n\nPlease install:\n• Rainbow Wallet\n• MetaMask\n• Coinbase Wallet\n• Or any Web3 wallet');
+                    return;
+                }
+                
+                // Request accounts - works with ANY wallet
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAddress = accounts[0];
+                
+                // Update UI immediately
+                document.getElementById('connectButton').style.display = 'none';
+                document.getElementById('walletStatus').style.display = 'block';
+                document.getElementById('walletAddress').textContent = 
+                    userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+                document.getElementById('createBattle').disabled = false;
+                
+                // Check/switch network in background (doesn't block)
+                setTimeout(() => checkAndSwitchNetwork(), 500);
+                
+            } catch (e) {
+                console.error(e);
+                if (e.code !== 4001) alert('Connection failed: ' + e.message);
+            }
+        };
+        
+        async function checkAndSwitchNetwork() {
+            try {
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if (chainId !== CHAIN_ID_HEX) {
+                    if (confirm('Switch to Base Sepolia testnet?')) {
+                        try {
+                            await window.ethereum.request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: CHAIN_ID_HEX }]
+                            });
+                        } catch (err) {
+                            if (err.code === 4902) {
+                                await window.ethereum.request({
+                                    method: 'wallet_addEthereumChain',
+                                    params: [{
+                                        chainId: CHAIN_ID_HEX,
+                                        chainName: 'Base Sepolia',
+                                        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                        rpcUrls: ['https://sepolia.base.org'],
+                                        blockExplorerUrls: ['https://sepolia.basescan.org']
+                                    }]
+                                });
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('Network check:', e);
+            }
+        }
+        
         // Character counter with live updates
         const roastTextarea = document.getElementById('roastText');
         const charCountSpan = document.getElementById('charCount');
@@ -662,71 +724,7 @@ Recommendation: STRONG WINNER CANDIDATE
         const walletAddress = document.getElementById('walletAddress');
         const createBattleButton = document.getElementById('createBattle');
         
-        connectButton?.addEventListener('click', async () => {
-            try {
-                if (!window.ethereum) {
-                    alert('Please install Rainbow wallet or MetaMask');
-                    return;
-                }
-                
-                // Simple wallet connection
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
-                });
-                
-                if (!accounts?.[0]) return;
-                
-                userAddress = accounts[0];
-                
-                // Update UI immediately
-                connectButton.style.display = 'none';
-                walletStatus.style.display = 'flex';
-                walletStatus.style.justifyContent = 'center';
-                walletAddress.textContent = `${userAddress.slice(0, 6)}…${userAddress.slice(-4)}`;
-                
-                if (createBattleButton) {
-                    createBattleButton.disabled = false;
-                }
-                
-                // Check network AFTER UI update (non-blocking)
-                setTimeout(async () => {
-                    try {
-                        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                        if (chainId !== CHAIN_ID_HEX) {
-                            const switch_network = confirm('Switch to Base Sepolia testnet?');
-                            if (switch_network) {
-                                try {
-                                    await window.ethereum.request({
-                                        method: 'wallet_switchEthereumChain',
-                                        params: [{ chainId: CHAIN_ID_HEX }]
-                                    });
-                                } catch (err) {
-                                    if (err.code === 4902) {
-                                        await window.ethereum.request({
-                                            method: 'wallet_addEthereumChain',
-                                            params: [{
-                                                chainId: CHAIN_ID_HEX,
-                                                chainName: 'Base Sepolia',
-                                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-                                                rpcUrls: ['https://sepolia.base.org'],
-                                                blockExplorerUrls: ['https://sepolia.basescan.org']
-                                            }]
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.log('Network check:', e);
-                    }
-                }, 100);
-                
-            } catch (error) {
-                if (error.code !== 4001) { // User rejected
-                    alert('Connection failed: ' + error.message);
-                }
-            }
-        });
+        // Wallet connection now handled by onclick="connectWalletNow()" - see above
         
         // Battle creation with validation
         const battleForm = document.getElementById('battleForm');
