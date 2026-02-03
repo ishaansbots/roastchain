@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Test - RoastChain</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+        }
+        
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #ff5020;
+        }
+        
+        .status {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #333;
+        }
+        
+        .success {
+            color: #4caf50;
+        }
+        
+        .error {
+            color: #ff5252;
+        }
+        
+        pre {
+            background: #111;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Wallet Connection Test</h1>
+    
+    <div class="status" id="status">
+        <strong>Status:</strong> Not connected
+    </div>
+    
+    <button onclick="testMetaMask()">1. Test MetaMask Detection</button>
+    <button onclick="connectWallet()">2. Connect Wallet</button>
+    <button onclick="checkNetwork()">3. Check Network</button>
+    <button onclick="switchToBase()">4. Switch to Base</button>
+    
+    <div class="status">
+        <strong>Console Log:</strong>
+        <pre id="log"></pre>
+    </div>
+    
+    <script>
+        const BASE_CHAIN_ID = '0x2105'; // 8453 in hex
+        
+        function log(message) {
+            const logEl = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+        
+        function setStatus(message, isError = false) {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = `<strong>Status:</strong> <span class="${isError ? 'error' : 'success'}">${message}</span>`;
+        }
+        
+        function testMetaMask() {
+            log('Testing MetaMask detection...');
+            
+            if (typeof window.ethereum === 'undefined') {
+                log('❌ MetaMask NOT detected');
+                setStatus('MetaMask not installed', true);
+                alert('MetaMask not detected!\n\nPlease install MetaMask from:\nhttps://metamask.io');
+                return false;
+            }
+            
+            log('✅ MetaMask detected');
+            log(`Provider: ${window.ethereum.isMetaMask ? 'MetaMask' : 'Other'}`);
+            setStatus('MetaMask detected ✓');
+            return true;
+        }
+        
+        async function connectWallet() {
+            try {
+                log('Requesting wallet connection...');
+                
+                if (!testMetaMask()) return;
+                
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                
+                if (!accounts || accounts.length === 0) {
+                    throw new Error('No accounts returned');
+                }
+                
+                const address = accounts[0];
+                log(`✅ Connected: ${address}`);
+                setStatus(`Connected: ${address.slice(0, 6)}...${address.slice(-4)}`);
+                
+                return address;
+                
+            } catch (error) {
+                log(`❌ Connection error: ${error.message}`);
+                setStatus(`Error: ${error.message}`, true);
+                
+                if (error.code === 4001) {
+                    alert('Connection rejected!\n\nPlease approve the connection in MetaMask.');
+                } else {
+                    alert(`Connection failed:\n\n${error.message}`);
+                }
+            }
+        }
+        
+        async function checkNetwork() {
+            try {
+                log('Checking current network...');
+                
+                if (!testMetaMask()) return;
+                
+                const chainId = await window.ethereum.request({
+                    method: 'eth_chainId'
+                });
+                
+                log(`Current chain ID: ${chainId}`);
+                log(`Expected: ${BASE_CHAIN_ID} (Base mainnet)`);
+                
+                if (chainId === BASE_CHAIN_ID) {
+                    log('✅ Already on Base network');
+                    setStatus('On Base network ✓');
+                } else {
+                    log('⚠️ Not on Base network');
+                    setStatus('Wrong network - need Base', true);
+                    
+                    const networks = {
+                        '0x1': 'Ethereum Mainnet',
+                        '0x5': 'Goerli Testnet',
+                        '0x89': 'Polygon',
+                        '0xa': 'Optimism',
+                        '0xa4b1': 'Arbitrum',
+                        '0x2105': 'Base'
+                    };
+                    
+                    alert(`Current network: ${networks[chainId] || 'Unknown'}\n\nPlease switch to Base network!`);
+                }
+                
+                return chainId;
+                
+            } catch (error) {
+                log(`❌ Network check error: ${error.message}`);
+                setStatus(`Error: ${error.message}`, true);
+            }
+        }
+        
+        async function switchToBase() {
+            try {
+                log('Attempting to switch to Base network...');
+                
+                if (!testMetaMask()) return;
+                
+                // Try to switch
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: BASE_CHAIN_ID }],
+                    });
+                    
+                    log('✅ Switched to Base network');
+                    setStatus('Switched to Base ✓');
+                    
+                } catch (switchError) {
+                    // Network not added, try to add it
+                    if (switchError.code === 4902) {
+                        log('Base network not found, adding it...');
+                        
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: BASE_CHAIN_ID,
+                                chainName: 'Base',
+                                nativeCurrency: {
+                                    name: 'Ethereum',
+                                    symbol: 'ETH',
+                                    decimals: 18
+                                },
+                                rpcUrls: ['https://mainnet.base.org'],
+                                blockExplorerUrls: ['https://basescan.org']
+                            }]
+                        });
+                        
+                        log('✅ Base network added and switched');
+                        setStatus('Base network added ✓');
+                        
+                    } else {
+                        throw switchError;
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Switch error: ${error.message}`);
+                setStatus(`Error: ${error.message}`, true);
+                alert(`Failed to switch network:\n\n${error.message}`);
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            log('Page loaded');
+            testMetaMask();
+        });
+        
+        // Listen for account changes
+        if (typeof window.ethereum !== 'undefined') {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                log(`Account changed: ${accounts[0] || 'disconnected'}`);
+            });
+            
+            window.ethereum.on('chainChanged', (chainId) => {
+                log(`Network changed: ${chainId}`);
+                window.location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

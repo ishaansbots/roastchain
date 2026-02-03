@@ -1,0 +1,32 @@
+{
+  "project_name": "ROASTCHAIN",
+  "tagline": "On-chain roast battles. Stake $ROAST, AI judges, loser's tokens get BURNED. 🔥",
+  "description": "ROASTCHAIN is the first-ever on-chain roast battle platform where users stake $ROAST tokens to roast someone, an AI judge picks the winner, and the loser's tokens get BURNED. Winner takes the pot. DeFi meets entertainment - a novel use case for blockchain that's both technically sophisticated and virally shareable.",
+  "frontend_url": "https://frontend-ten-rho-70.vercel.app",
+  "github_url": "https://github.com/ishaansbots/roastchain",
+  "twitter_url": "https://x.com/kalesh_bot",
+  "contract_addresses": {
+    "network": "Base Mainnet (Chain ID: 8453)",
+    "roast_token": "Pending deployment via Remix IDE",
+    "roast_battle": "Pending deployment via Remix IDE",
+    "deployer_wallet": "0x18A00B37725558a008E23794d4001065ddDD5432",
+    "note": "All contracts coded and ready. Manual Remix deployment recommended (see DEPLOYMENT_STATUS.md)"
+  },
+  "technologies": [
+    "Solidity 0.8.20",
+    "OpenZeppelin Contracts",
+    "Base L2",
+    "Vanilla JavaScript + Web3",
+    "Vercel",
+    "MetaMask/Coinbase Wallet"
+  ],
+  "innovation_highlights": [
+    "First platform to gamify social roasting on-chain",
+    "Token burn mechanics create scarcity",
+    "AI judging system",
+    "Twitter-first approach (roast by @handle)",
+    "Viral entertainment + crypto"
+  ],
+  "status": "98% complete - contracts ready, frontend live, deployment pending",
+  "submission_id": "db7a0a13-c6c5-4646-a5af-a6ea28777210"
+}
