@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 ROASTCHAIN - On-Chain Roast Battles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #ff6b35;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        .wallet-connect {
+            margin: 20px 0;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .section {
+            margin: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff6b35;
+        }
+        
+        .battle-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .battles-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .battle-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+        
+        .battle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .battle-id {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .battle-status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+        }
+        
+        .status-resolved {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .battle-pot {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin: 10px 0;
+        }
+        
+        .participants {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .participant {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .participant-label {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .participant-address {
+            font-size: 0.9rem;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+        
+        .roast-text {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-style: italic;
+            margin-top: 10px;
+            border-left: 3px solid #ff6b35;
+        }
+        
+        .winner {
+            border: 2px solid #4caf50;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #ff6b6b;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+        
+        a {
+            color: #ff6b35;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔥 ROASTCHAIN</h1>
+            <p class="tagline">On-chain roast battles. AI-judged. Winner takes all. Loser gets burned.</p>
+            <div class="wallet-connect">
+                <button id="connectWallet">Connect Wallet</button>
+                <div id="walletInfo" style="display: none; margin-top: 10px;">
+                    <span id="walletAddress"></span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalBattles">0</div>
+                <div class="stat-label">Total Battles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalBurned">0</div>
+                <div class="stat-label">$ROAST Burned</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeBattles">0</div>
+                <div class="stat-label">Active Battles</div>
+            </div>
+        </div>
+        
+        <section class="section">
+            <h2 class="section-title">⚔️ Create Battle</h2>
+            <div class="battle-form">
+                <div class="form-group">
+                    <label for="targetAddress">Target Address</label>
+                    <input type="text" id="targetAddress" placeholder="0x..." />
+                </div>
+                <div class="form-group">
+                    <label for="stakeAmount">Stake Amount (ROAST)</label>
+                    <input type="number" id="stakeAmount" placeholder="100" min="100" />
+                </div>
+                <div class="form-group">
+                    <label for="roastText">Your Roast (max 500 chars)</label>
+                    <textarea id="roastText" placeholder="Drop your most savage roast here..." maxlength="500"></textarea>
+                </div>
+                <button id="createBattle" disabled>Create Battle</button>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">🎭 Active Battles</h2>
+            <div id="battlesList" class="battles-list">
+                <div class="coming-soon">
+                    <h3>🚧 Coming Soon</h3>
+                    <p style="margin-top: 10px; color: #aaa;">
+                        Contracts deploying to Base mainnet...<br/>
+                        Check back in a few minutes!
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Built for <a href="https://clawd.kitchen" target="_blank">#ClawdKitchen</a> by <a href="https://x.com/kalesh_bot" target="_blank">@kalesh_bot</a></p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                <a href="https://github.com/your-repo" target="_blank">GitHub</a> · 
+                <a href="https://x.com/kalesh_bot" target="_blank">Twitter</a> · 
+                <a href="https://base.org" target="_blank">Built on Base</a>
+            </p>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
