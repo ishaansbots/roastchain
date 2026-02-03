@@ -812,21 +812,25 @@ Good luck! 💀`);
             }
         });
         
-        // Listen for account/network changes
+        // Listen for account/network changes (NO RELOAD - causes refresh loop)
         if (typeof window.ethereum !== 'undefined') {
             window.ethereum.on('accountsChanged', (accounts) => {
                 if (accounts.length === 0) {
                     console.log('[RoastChain] Wallet disconnected');
-                    window.location.reload();
+                    // Reset UI instead of reload
+                    userAddress = null;
+                    connectButton.style.display = 'block';
+                    walletStatus.style.display = 'none';
+                    if (createBattleButton) createBattleButton.disabled = true;
                 } else {
                     userAddress = accounts[0];
                     walletAddress.textContent = `${userAddress.slice(0, 6)}…${userAddress.slice(-4)}`;
                 }
             });
             
-            window.ethereum.on('chainChanged', () => {
-                console.log('[RoastChain] Network changed, reloading...');
-                window.location.reload();
+            window.ethereum.on('chainChanged', (chainId) => {
+                console.log('[RoastChain] Network changed to:', chainId);
+                // Just log it - don't reload
             });
         }
         
